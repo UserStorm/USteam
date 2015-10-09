@@ -14,7 +14,7 @@ abstract class UserStormTestCase extends \PHPUnit_Framework_TestCase
     /**
      * Create defaule SteamPlayer Model for testing
      *
-     * @return SteamPlayer
+     * @return array
      */
     protected function createDefaultSteamPlayer()
     {
