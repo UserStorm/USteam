@@ -23,6 +23,11 @@ class SteamClientTest extends UserStormTestCase
      */
     private $client;
 
+    public function testCanInstantiateWithoutClient()
+    {
+        $client = new SteamClient(self::API_KEY);
+        $this->assertTrue($client instanceof SteamClient);
+    }
 
     public function testCanRequestPlayer()
     {
