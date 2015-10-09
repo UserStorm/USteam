@@ -8,6 +8,7 @@ vendor/
 # Exclude phpunit xml
 /phpunit.xml
 /phpunit.phar
+/codecoverage
 
 # Exclude IDE Files
 /.idea

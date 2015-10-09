@@ -7,32 +7,56 @@
 
 namespace UserStorm\Tests\USteam;
 
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use UserStorm\Tests\UserStormTestCase;
-use UserStorm\USteam\Models\Player\SteamPlayer;
+use UserStorm\USteam\HttpClient\HttpClient;
 use UserStorm\USteam\SteamClient;
 
 class SteamClientTest extends UserStormTestCase
 {
+    const API_KEY = "I-AM-AN-APY-KEY-123456";
+
     /**
      * @var SteamClient
      */
     private $client;
 
-    protected function setUp()
-    {
-        $this->client = new SteamClient("I-AM-AN-APY-KEY-123456");
-        $this->client = new SteamClient("801BCE6199999BDAC62E6EFF29C4504A");
-    }
 
-    public function testInitClient()
-    {
-        $this->assertTrue($this->client->isInitialized(), "Client is not initialized but it should be");
-    }
-
-    public function testCanRequestUser()
+    public function testCanRequestPlayer()
     {
         $player = $this->createDefaultSteamPlayer();
 
-        $this->assertEquals($player, $this->client->requestPlayer(76561197960435530), "Requested Player information is not accurate");
+        $mock = new MockHandler([
+            new Response(200, array(), file_get_contents(dirname(__DIR__) . "/RawResponses/player_200_response.txt")),
+        ]);
+        $this->setUpClient($mock);
+
+        $this->assertEquals($player, $this->client->requestPlayer(array(76561197960435530)), "Requested Player information is not accurate");
+    }
+
+    /**
+     * @expectedException \UserStorm\USteam\Exceptions\SteamException
+     */
+    public function testCannotRequestPlayer()
+    {
+        $mock = new MockHandler([
+            new Response(403, array(), file_get_contents(dirname(__DIR__) . "/RawResponses/player_403_response.txt"))
+        ]);
+        $this->setUpClient($mock);
+
+        $this->client->requestPlayer(array(76561197960435530));
+    }
+
+    private function setUpClient(MockHandler $mock = null)
+    {
+        $client = null;
+        if (!is_null($mock)) {
+            $handler = HandlerStack::create($mock);
+            $client = new HttpClient(['handler' => $handler]);
+        }
+
+        $this->client = new SteamClient(self::API_KEY, $client);
     }
 }

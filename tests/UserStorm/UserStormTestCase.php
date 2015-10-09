@@ -22,7 +22,8 @@ abstract class UserStormTestCase extends \PHPUnit_Framework_TestCase
         $player->setSteamid(76561197960435530);
         $player->setCommunityvisibilitystate(3);
         $player->setProfilestate(1);
-        $player->setLastlogoff(1444301399);
+        $player->setLastlogoff(1444359653);
+        $player->setPersonaname("Robin");
         $player->setProfileurl("http://steamcommunity.com/id/robinwalker/");
         $player->setAvatar("https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/f1/f1dd60a188883caf82d0cbfccfe6aba0af1732d4.jpg");
         $player->setAvatarmedium("https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/f1/f1dd60a188883caf82d0cbfccfe6aba0af1732d4_medium.jpg");
@@ -36,6 +37,6 @@ abstract class UserStormTestCase extends \PHPUnit_Framework_TestCase
         $player->setLocstatecode("WA");
         $player->setLoccityid(3961);
 
-        return $player;
+        return array($player);
     }
 }
