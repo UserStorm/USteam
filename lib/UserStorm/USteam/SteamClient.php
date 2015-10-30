@@ -7,8 +7,6 @@
 
 namespace UserStorm\USteam;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use UserStorm\USteam\HttpClient\HttpClient;
 use UserStorm\USteam\Models\Player\SteamPlayer;
 
@@ -18,17 +16,27 @@ use UserStorm\USteam\Models\Player\SteamPlayer;
  * Class SteamClient
  * @package UserStorm\USteam
  */
-class SteamClient
+abstract class SteamClient
 {
     /**
      * @var string
      */
-    private $steamBaseUrl = "http://api.steampowered.com/";
+    protected $baseUrl = "http://api.steampowered.com/";
 
     /**
      * @var string
      */
-    private $urlGetPlayerSummaries = "ISteamUser/GetPlayerSummaries/v0002/?steamids={steamIds}";
+    protected $interface;
+
+    /**
+     * @var string
+     */
+    protected $method;
+
+    /**
+     * @var int
+     */
+    protected $version;
 
     /**
      * API Key for accessing the Steam API
@@ -57,45 +65,45 @@ class SteamClient
         }
     }
 
+    private function generateUri()
+    {
+        $url = $this->baseUrl;
+        if ($this->interface) {
+            $url .= $this->interface . '/';
+        }
+
+        if ($this->method) {
+            $url .= $this->method . '/';
+        }
+
+        if ($this->version) {
+            $url .= 'v' . $this->version . '/';
+        }
+
+        return $url;
+    }
+
     /**
      * Returns the requests raw response
      *
-     * @param string $url
+     * @param string $arguments
      *
      * @return string
      */
-    private function request($url)
+    protected function request($arguments = null)
     {
-        $url .= "&key=" . $this->apiKey;
+        $parameters = array(
+            'key' => $this->apiKey
+        );
+
+        if (!empty($arguments)) {
+            $parameters = array_merge($parameters, $arguments);
+        }
+
+        $url = $this->generateUri() . '?' . http_build_query($parameters);
 
         $response = $this->httpClient->request(HttpClient::METHOD_GET, $url);
 
         return $response;
-    }
-
-    /**
-     * Request steam players with its Steam ID
-     *
-     * @param array $steamIds
-     *
-     * @return array
-     */
-    public function requestPlayer(array $steamIds)
-    {
-        $steamIds = implode(",", $steamIds);
-        $url = $this->steamBaseUrl . str_replace("{steamIds}", $steamIds, $this->urlGetPlayerSummaries);
-
-        $response = $this->request($url);
-
-        $players = json_decode($response, true)["response"]["players"];
-
-        $playerModels = array();
-        foreach ($players as $player) {
-            $tmpPlayer = new SteamPlayer($player);
-
-            $playerModels[] = $tmpPlayer;
-        }
-
-        return $playerModels;
     }
 }

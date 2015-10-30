@@ -5,15 +5,26 @@
  * @author Sebastian Nagels <snagels@userstorm.com>
  */
 
-namespace UserStorm\USteam\Models\Player;
+namespace UserStorm\USteam\Models;
+
 use DateTime;
 
 /**
  * Class SteamPlayer
- * @package UserStorm\USteam\Models\Player
+ * @package UserStorm\USteam\Models\User
  */
 class SteamPlayer
 {
+    static $personaStates = array(
+        0 => "Offline",
+        1 => "Online",
+        2 => "Busy",
+        3 => "Away",
+        4 => "Snooze",
+        5 => "Looking to trade",
+        6 => "Looking to Play"
+    );
+
     /**
      * @var int
      */
@@ -264,11 +275,16 @@ class SteamPlayer
     }
 
     /**
+     * @param bool $raw False will present the the associated String
      * @return int
      */
-    public function getPersonastate()
+    public function getPersonastate($raw = false)
     {
-        return $this->personastate;
+        if ($raw) {
+            return $this->personastate;
+        }
+
+        return self::$personaStates[$this->personastate];
     }
 
     /**

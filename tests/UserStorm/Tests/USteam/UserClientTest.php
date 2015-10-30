@@ -1,6 +1,6 @@
 <?php
 /**
- * SteamClient Tests
+ * UserClient Tests
  *
  * @author Sebastian Nagels <snagels@userstorm.com>
  */
@@ -12,33 +12,33 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use UserStorm\Tests\UserStormTestCase;
 use UserStorm\USteam\HttpClient\HttpClient;
-use UserStorm\USteam\SteamClient;
+use UserStorm\USteam\UserClient;
 
-class SteamClientTest extends UserStormTestCase
+class UserClientTest extends UserStormTestCase
 {
     const API_KEY = "I-AM-AN-APY-KEY-123456";
 
     /**
-     * @var SteamClient
+     * @var UserClient
      */
     private $client;
 
     public function testCanInstantiateWithoutClient()
     {
-        $client = new SteamClient(self::API_KEY);
-        $this->assertTrue($client instanceof SteamClient);
+        $client = new UserClient(self::API_KEY);
+        $this->assertTrue($client instanceof UserClient);
     }
 
     public function testCanRequestPlayer()
     {
-        $player = $this->createDefaultSteamPlayer();
+        $player = $this->createDefaultSteamPlayer()[0];
 
         $mock = new MockHandler([
             new Response(200, array(), file_get_contents(dirname(__DIR__) . "/RawResponses/player_200_response.txt")),
         ]);
         $this->setUpClient($mock);
 
-        $this->assertEquals($player, $this->client->requestPlayer(array(76561197960435530)), "Requested Player information is not accurate");
+        $this->assertEquals($player, $this->client->getPlayerSummaries(array(76561197960435530)), "Requested User information is not accurate");
     }
 
     /**
@@ -51,7 +51,7 @@ class SteamClientTest extends UserStormTestCase
         ]);
         $this->setUpClient($mock);
 
-        $this->client->requestPlayer(array(76561197960435530));
+        $this->client->getPlayerSummaries(array(76561197960435530));
     }
 
     private function setUpClient(MockHandler $mock = null)
@@ -62,6 +62,6 @@ class SteamClientTest extends UserStormTestCase
             $client = new HttpClient(['handler' => $handler]);
         }
 
-        $this->client = new SteamClient(self::API_KEY, $client);
+        $this->client = new UserClient(self::API_KEY, $client);
     }
 }

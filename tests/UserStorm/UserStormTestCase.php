@@ -1,7 +1,8 @@
 <?php
 
 namespace UserStorm\Tests;
-use UserStorm\USteam\Models\Player\SteamPlayer;
+
+use UserStorm\USteam\Models\User\SteamPlayer;
 
 /**
  * Base testcase class for all UserStorm testcases
