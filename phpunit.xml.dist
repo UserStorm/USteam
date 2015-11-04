@@ -4,14 +4,14 @@
          stopOnFailure="false">
 
     <testsuites>
-        <testsuite name="USteam">
-            <directory>./tests/UserStorm/Tests/</directory>
+        <testsuite name="UserStorm USteam Test suite">
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./src/UserStorm/</directory>
+            <directory suffix=".php">./src/</directory>
         </whitelist>
     </filter>
 </phpunit>

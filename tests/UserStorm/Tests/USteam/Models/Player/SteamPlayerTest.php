@@ -9,14 +9,22 @@ namespace UserStorm\Tests\USteam\Models\Player;
 
 
 use UserStorm\Tests\UserStormTestCase;
-use UserStorm\USteam\Models\Player\SteamPlayer;
+use UserStorm\USteam\Models\SteamPlayer;
 
+/**
+ * Class SteamPlayerTest
+ * Test behavior of SteamPlayer model
+ * @package UserStorm\Tests\USteam\Models\Player
+ */
 class SteamPlayerTest extends UserStormTestCase
 {
+    /**
+     * Test convertion of timestamp to DateTime object
+     */
     public function testConvertTimestampToDateTime()
     {
         /** @var SteamPlayer $player */
-        $player = $this->createDefaultSteamPlayer()[0];
+        $player = $this->createDefaultSteamPlayer();
 
         $lasLogOff = new \DateTime();
         $lasLogOff->setTimestamp(1444359653);

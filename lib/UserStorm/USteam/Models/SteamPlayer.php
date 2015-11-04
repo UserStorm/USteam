@@ -7,11 +7,9 @@
 
 namespace UserStorm\USteam\Models;
 
-use DateTime;
-
 /**
  * Class SteamPlayer
- * @package UserStorm\USteam\Models\User
+ * @package UserStorm\USteam\Models
  */
 class SteamPlayer
 {
@@ -46,7 +44,7 @@ class SteamPlayer
     private $personaname;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     private $lastlogoff;
 
@@ -86,7 +84,7 @@ class SteamPlayer
     private $primaryclanid;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     private $timecreated;
 
@@ -194,7 +192,7 @@ class SteamPlayer
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getLastlogoff()
     {
@@ -328,7 +326,7 @@ class SteamPlayer
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getTimecreated()
     {

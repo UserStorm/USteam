@@ -7,7 +7,8 @@
 
 namespace UserStorm\USteam\Interfaces;
 
-use UserStorm\USteam\Models\User\SteamPlayer;
+use UserStorm\USteam\Models\Player\Bans;
+use UserStorm\USteam\Models\SteamPlayer;
 
 /**
  * Interface ISteamUser
@@ -15,18 +16,28 @@ use UserStorm\USteam\Models\User\SteamPlayer;
  */
 interface ISteamUser
 {
-    public function GetPlayerBans();
+    /**
+     * Request steam player bans with its Steam ID
+     * @param string $steamId
+     * @return Bans
+     */
+    public function GetPlayerBans($steamId);
 
     /**
      * Request steam players with its Steam ID
-     *
      * @param string $steamId
-     *
      * @return SteamPlayer User Summary Data
      */
     public function GetPlayerSummaries($steamId);
 
-    public function GetFriendList();
+    /**
+     * Request friend list of steam player
+     * @param string    $steamId
+     * @param string    $relationship
+     * @return FriendList Users friend list
+     */
+    public function GetFriendList($steamId, $relationship = "all");
+
     public function GetUserGroupList();
     public function ResolveVanityURL($vanityUrl);
 }

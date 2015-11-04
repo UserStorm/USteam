@@ -2,20 +2,20 @@
 
 namespace UserStorm\Tests;
 
-use UserStorm\USteam\Models\User\SteamPlayer;
+use UserStorm\USteam\Models\Player\Bans;
+use UserStorm\USteam\Models\Player\FriendList;
+use UserStorm\USteam\Models\SteamPlayer;
 
 /**
- * Base testcase class for all UserStorm testcases
- *
  * Class UserstormTestCase
+ * Base test case class for all UserStorm test cases
  * @package UserStorm\Tests
  */
 abstract class UserStormTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Create defaule SteamPlayer Model for testing
-     *
-     * @return array
+     * Create default SteamPlayer Model for testing
+     * @return SteamPlayer
      */
     protected function createDefaultSteamPlayer()
     {
@@ -38,6 +38,32 @@ abstract class UserStormTestCase extends \PHPUnit_Framework_TestCase
         $player->setLocstatecode("WA");
         $player->setLoccityid(3961);
 
-        return array($player);
+        return $player;
+    }
+
+    /**
+     * Create default Player\Bans Model for testing
+     */
+    protected function createDefaultSteamPlayerBans()
+    {
+        $bans = new Bans();
+        $bans->setSteamId(76561197960435530);
+        $bans->setCommunityBanned(false);
+        $bans->setVACBanned(false);
+        $bans->setNumberOfVACBans(0);
+        $bans->setDaysSinceLastBan(0);
+        $bans->setNumberOfVACBans(0);
+        $bans->setEconomyBan("none");
+
+        return $bans;
+    }
+
+    /**
+     * Create default Player\FriendList Model for testing
+     */
+    protected function createDefaultSteamFriendList()
+    {
+        $friendList = new FriendList();
+        // TODO: preprare friend list for comparison
     }
 }

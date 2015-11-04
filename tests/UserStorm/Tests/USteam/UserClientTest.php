@@ -14,6 +14,11 @@ use UserStorm\Tests\UserStormTestCase;
 use UserStorm\USteam\HttpClient\HttpClient;
 use UserStorm\USteam\UserClient;
 
+/**
+ * Class UserClientTest
+ * Test UserClient
+ * @package UserStorm\Tests\USteam
+ */
 class UserClientTest extends UserStormTestCase
 {
     const API_KEY = "I-AM-AN-APY-KEY-123456";
@@ -23,37 +28,81 @@ class UserClientTest extends UserStormTestCase
      */
     private $client;
 
+    /**
+     * Test if UserClient can be instantiated without
+     * injecting guzzle client.
+     */
     public function testCanInstantiateWithoutClient()
     {
         $client = new UserClient(self::API_KEY);
         $this->assertTrue($client instanceof UserClient);
     }
 
+    /**
+     * Test player request
+     */
     public function testCanRequestPlayer()
     {
-        $player = $this->createDefaultSteamPlayer()[0];
+        $player = $this->createDefaultSteamPlayer();
 
         $mock = new MockHandler([
             new Response(200, array(), file_get_contents(dirname(__DIR__) . "/RawResponses/player_200_response.txt")),
         ]);
         $this->setUpClient($mock);
 
-        $this->assertEquals($player, $this->client->getPlayerSummaries(array(76561197960435530)), "Requested User information is not accurate");
+        $this->assertEquals($player,
+            $this->client->getPlayerSummaries(76561197960435530),
+            "Testing player request"
+        );
     }
 
     /**
-     * @expectedException \UserStorm\USteam\Exceptions\SteamException
+     * Test player bans request
      */
-    public function testCannotRequestPlayer()
+    public function testCanRequestPlayerBans()
     {
+        $playerBans = $this->createDefaultSteamPlayerBans();
+
         $mock = new MockHandler([
-            new Response(403, array(), file_get_contents(dirname(__DIR__) . "/RawResponses/player_403_response.txt"))
+            new Response(200, array(), file_get_contents(dirname(__DIR__) . "/RawResponses/playerbans_200_response.txt")),
         ]);
         $this->setUpClient($mock);
 
-        $this->client->getPlayerSummaries(array(76561197960435530));
+        $this->assertEquals(
+            $playerBans,
+            $this->client->GetPlayerBans(76561197960435530),
+            "Testing player bans request"
+        );
     }
 
+    public function testCanRequestFriendList()
+    {
+        // TODO: Create test
+    }
+
+    /**
+     * Test client behavior if 403 error occurred
+     * @expectedException \UserStorm\USteam\Exceptions\SteamException
+     */
+    public function testCannotRequestPlayerInformation()
+    {
+        $error = file_get_contents(dirname(__DIR__) . "/RawResponses/error_403_response.txt");
+        $mock = new MockHandler([
+            new Response(403, array(), $error)
+        ]);
+        $this->setUpClient($mock);
+
+        $this->assertSame(
+            $error,
+            $this->client->getPlayerSummaries(76561197960435530),
+            "Testing request if response is 403 error"
+        );
+    }
+
+    /**
+     * Setup the client
+     * @param MockHandler|null $mock
+     */
     private function setUpClient(MockHandler $mock = null)
     {
         $client = null;
